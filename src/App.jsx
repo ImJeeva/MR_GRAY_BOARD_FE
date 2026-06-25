@@ -2012,9 +2012,9 @@ function Reports() {
 
       <div className="date-filter">
         <label>From:</label>
-        <input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+        <input type="date" lang="en-GB"value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
         <label>To:</label>
-        <input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+        <input type="date" lang="en-GB"value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
         <label>Status:</label>
         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="">All</option>
@@ -2366,11 +2366,11 @@ function InvoiceForm() {
             </div>
             <div className="form-group">
               <label>Invoice Date</label>
-              <input type="date" value={invoice.invoiceDate} onChange={(e) => setInvoice({...invoice, invoiceDate: e.target.value})} required />
+              <input type="date" lang="en-GB"value={invoice.invoiceDate} onChange={(e) => setInvoice({...invoice, invoiceDate: e.target.value})} required />
             </div>
             <div className="form-group">
               <label>Due Date</label>
-              <input type="date" value={invoice.dueDate || ''} onChange={(e) => setInvoice({...invoice, dueDate: e.target.value})} />
+              <input type="date" lang="en-GB"value={invoice.dueDate || ''} onChange={(e) => setInvoice({...invoice, dueDate: e.target.value})} />
             </div>
             <div className="form-group">
               <label>Status</label>
@@ -2404,7 +2404,7 @@ function InvoiceForm() {
             </div>
             <div className="form-group">
               <label>Date of Supply</label>
-              <input type="date" value={invoice.dateOfSupply || ''} onChange={(e) => setInvoice({...invoice, dateOfSupply: e.target.value})} />
+              <input type="date" lang="en-GB"value={invoice.dateOfSupply || ''} onChange={(e) => setInvoice({...invoice, dateOfSupply: e.target.value})} />
             </div>
           </div>
         </div>
