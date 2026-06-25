@@ -3,39 +3,25 @@ import { useState, useEffect } from 'react';
 import { clientService, companyService, invoiceService } from './services/api';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import './App.css';
 
-// DateInput: shows dd/mm/yyyy, stores yyyy-mm-dd internally
+// DateInput: calendar picker, stores yyyy-mm-dd internally
 function DateInput({ value, onChange, required, style, className }) {
-  const toDisplay = (v) => v ? v.split('-').reverse().join('/') : '';
-  const toInternal = (v) => {
-    const parts = v.split('/');
-    if (parts.length === 3 && parts[2].length === 4) return `${parts[2]}-${parts[1]}-${parts[0]}`;
-    return v;
-  };
-  const [display, setDisplay] = useState(toDisplay(value));
-
-  useEffect(() => { setDisplay(toDisplay(value)); }, [value]);
-
-  const handleChange = (e) => {
-    let val = e.target.value.replace(/\D/g, '');
-    if (val.length >= 3) val = val.slice(0, 2) + '/' + val.slice(2);
-    if (val.length >= 6) val = val.slice(0, 5) + '/' + val.slice(5);
-    val = val.slice(0, 10);
-    setDisplay(val);
-    if (val.length === 10) onChange({ target: { value: toInternal(val) } });
-  };
-
+  const toDate = (v) => { if (!v) return null; const [y,m,d] = v.split('-'); return new Date(y, m-1, d); };
+  const toInternal = (d) => { if (!d) return ''; return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
   return (
-    <input
-      type="text"
-      value={display}
-      onChange={handleChange}
-      placeholder="DD/MM/YYYY"
-      maxLength={10}
+    <DatePicker
+      selected={toDate(value)}
+      onChange={(date) => onChange({ target: { value: toInternal(date) } })}
+      dateFormat="dd/MM/yyyy"
+      placeholderText="DD/MM/YYYY"
       required={required}
-      style={style}
       className={className}
+      showMonthDropdown
+      showYearDropdown
+      dropdownMode="select"
     />
   );
 }
