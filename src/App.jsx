@@ -695,37 +695,39 @@ function Dashboard() {
       const lightGray = [236, 240, 241];
 
       doc.setFillColor(...primaryColor);
-      doc.rect(0, 0, pageWidth, 35, 'F');
-      
+      doc.rect(0, 0, pageWidth, 45, 'F');
+
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(22);
+      doc.setFontSize(20);
       doc.setFont('helvetica', 'bold');
-      doc.text(company.name || 'M.R.GRAY BOARDS', marginLeft, 15);
-      
+      doc.text(company.name || 'M.R.GRAY BOARDS', marginLeft, 12);
+
       doc.setFontSize(9);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`GSTIN: ${company.gstin || '-'}`, marginLeft, 18);
+
       doc.setFont('helvetica', 'normal');
       let companyInfo = [];
       if (company.address) companyInfo.push(company.address);
       if (company.city || company.state) companyInfo.push(`${company.city || ''}, ${company.state || ''}`);
-      if (company.gstin) companyInfo.push(`GSTIN: ${company.gstin}`);
       if (company.phone) companyInfo.push(`Ph: ${company.phone}`);
       if (company.email) companyInfo.push(`Email: ${company.email}`);
-      
+
       companyInfo.forEach((line, i) => {
-        doc.text(line, marginLeft, 21 + (i * 3.5));
+        doc.text(line, marginLeft, 24 + (i * 5));
       });
-      
+
       doc.setFontSize(18);
       doc.setFont('helvetica', 'bold');
-      doc.text('TAX INVOICE', pageWidth - marginRight, 13, { align: 'right' });
+      doc.text('TAX INVOICE', pageWidth - marginRight, 12, { align: 'right' });
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
-      doc.text(`Invoice No: ${invoice.invoiceNumber || '-'}`, pageWidth - marginRight, 20, { align: 'right' });
-      doc.text(`Invoice Date: ${formatDate(invoice.invoiceDate) || '-'}`, pageWidth - marginRight, 25, { align: 'right' });
-      if (invoice.dueDate) { doc.text(`Due Date: ${formatDate(invoice.dueDate)}`, pageWidth - marginRight, 30, { align: 'right' }); }
-      doc.text(`Status: ${invoice.status || '-'}`, pageWidth - marginRight, invoice.dueDate ? 34 : 30, { align: 'right' });
+      doc.text(`Invoice No: ${invoice.invoiceNumber || '-'}`, pageWidth - marginRight, 22, { align: 'right' });
+      doc.text(`Invoice Date: ${formatDate(invoice.invoiceDate) || '-'}`, pageWidth - marginRight, 28, { align: 'right' });
+      if (invoice.dueDate) { doc.text(`Due Date: ${formatDate(invoice.dueDate)}`, pageWidth - marginRight, 34, { align: 'right' }); }
+      doc.text(`Status: ${invoice.status || '-'}`, pageWidth - marginRight, invoice.dueDate ? 40 : 34, { align: 'right' });
 
-      y = 42;
+      y = 52;
 
       const boxH = 40;
       doc.setFillColor(...lightGray);
@@ -1266,7 +1268,7 @@ function CompanyList() {
   const [showForm, setShowForm] = useState(false);
   const [editingCompany, setEditingCompany] = useState(null);
   const [formData, setFormData] = useState({
-    name: '', email: '', phone: '', address: '', city: '', state: '', zipCode: '', country: '', taxNumber: '', logoUrl: '', gstin: '', placeOfSupply: '', gstin: '', placeOfSupply: ''
+    name: '', email: '', phone: '', address: '', city: '', state: '', zipCode: '', country: '', taxNumber: '', logoUrl: '', gstin: '', placeOfSupply: ''
   });
 
   useEffect(() => {
@@ -1380,7 +1382,7 @@ function CompanyList() {
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
-              <th>Tax Number</th>
+              <th>GSTIN</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -1390,7 +1392,7 @@ function CompanyList() {
                 <td>{company.name}</td>
                 <td>{company.email}</td>
                 <td>{company.phone}</td>
-                <td>{company.taxNumber}</td>
+                <td>{company.gstin}</td>
                 <td className="actions">
                   <button onClick={() => handleEdit(company)} className="btn btn-sm">Edit</button>
                   <button onClick={() => handleDelete(company.id)} className="btn btn-sm btn-danger">Delete</button>
