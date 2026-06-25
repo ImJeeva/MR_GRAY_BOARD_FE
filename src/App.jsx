@@ -105,7 +105,7 @@ function Layout({ children }) {
           </Link>
           <Link to="/companies" className={`nav-item ${isActive('/companies') ? 'active' : ''}`}>
             <span className="nav-icon">🏢</span>
-            {sidebarOpen && <span>Companies</span>}
+            {sidebarOpen && <span>Company</span>}
           </Link>
         </nav>
         <div className="sidebar-footer">
