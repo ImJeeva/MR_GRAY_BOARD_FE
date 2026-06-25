@@ -2239,7 +2239,7 @@ function InvoiceForm() {
     placeOfSupply: '',
     reverseCharge: 'N',
     dateOfSupply: getTodayStr(),
-    items: [{ description: 'SUN DRY GRAY BOARD', hsnCode: '4802', uom: 'Bundle', quantity: 1, unitPrice: 0, amount: 0, cgstRate: 5, sgstRate: 5, igstRate: 0 }]
+    items: [{ description: 'SUN DRY GRAY BOARD', hsnCode: '4802', uom: 'Bundle', quantity: 1, unitPrice: 0, amount: 0, cgstRate: 2.5, sgstRate: 2.5, igstRate: 0 }]
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -2286,10 +2286,10 @@ function InvoiceForm() {
           quantity: item.quantity || 1,
           unitPrice: item.unitPrice || 0,
           amount: item.amount || 0,
-          cgstRate: item.cgstRate || 5,
-          sgstRate: item.sgstRate || 5,
+          cgstRate: item.cgstRate || 2.5,
+          sgstRate: item.sgstRate || 2.5,
           igstRate: item.igstRate || 0
-        })) : [{ description: 'SUN DRY GRAY BOARD', hsnCode: '4802', uom: 'Bundle', quantity: 1, unitPrice: 0, amount: 0, cgstRate: 5, sgstRate: 5, igstRate: 0 }]
+        })) : [{ description: 'SUN DRY GRAY BOARD', hsnCode: '4802', uom: 'Bundle', quantity: 1, unitPrice: 0, amount: 0, cgstRate: 2.5, sgstRate: 2.5, igstRate: 0 }]
       });
       setIsEditing(true);
       setEditingId(id);
@@ -2318,7 +2318,7 @@ function InvoiceForm() {
   const addItem = () => {
     setInvoice({ 
       ...invoice, 
-      items: [...invoice.items, { description: 'SUN DRY GRAY BOARD', hsnCode: '4802', uom: 'Bundle', quantity: 1, unitPrice: 0, amount: 0, cgstRate: 5, sgstRate: 5, igstRate: 0 }] 
+      items: [...invoice.items, { description: 'SUN DRY GRAY BOARD', hsnCode: '4802', uom: 'Bundle', quantity: 1, unitPrice: 0, amount: 0, cgstRate: 2.5, sgstRate: 2.5, igstRate: 0 }] 
     });
   };
 
