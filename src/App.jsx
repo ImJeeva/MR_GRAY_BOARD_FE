@@ -5,6 +5,41 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import './App.css';
 
+// DateInput: shows dd/mm/yyyy, stores yyyy-mm-dd internally
+function DateInput({ value, onChange, required, style, className }) {
+  const toDisplay = (v) => v ? v.split('-').reverse().join('/') : '';
+  const toInternal = (v) => {
+    const parts = v.split('/');
+    if (parts.length === 3 && parts[2].length === 4) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    return v;
+  };
+  const [display, setDisplay] = useState(toDisplay(value));
+
+  useEffect(() => { setDisplay(toDisplay(value)); }, [value]);
+
+  const handleChange = (e) => {
+    let val = e.target.value.replace(/\D/g, '');
+    if (val.length >= 3) val = val.slice(0, 2) + '/' + val.slice(2);
+    if (val.length >= 6) val = val.slice(0, 5) + '/' + val.slice(5);
+    val = val.slice(0, 10);
+    setDisplay(val);
+    if (val.length === 10) onChange({ target: { value: toInternal(val) } });
+  };
+
+  return (
+    <input
+      type="text"
+      value={display}
+      onChange={handleChange}
+      placeholder="DD/MM/YYYY"
+      maxLength={10}
+      required={required}
+      style={style}
+      className={className}
+    />
+  );
+}
+
 const getTodayStr = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -977,16 +1012,9 @@ function Dashboard() {
           style={{flex: 1}}
         />
         <label>From:</label>
-        <input
-          type="date" lang="en-GB"
-          value={dateFrom}
-          onChange={(e) => setDateFrom(e.target.value)}
-        />
+        <DateInput value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
         <label>To:</label>
-        <input
-          type="date" lang="en-GB"
-          value={dateTo}
-          onChange={(e) => setDateTo(e.target.value)}
+        <DateInput value={dateTo} onChange={(e) => setDateTo(e.target.value)}
         />
         {(dateFrom || dateTo) && (
           <button onClick={() => { setDateFrom(getFirstOfMonthStr()); setDateTo(getTodayStr()); }} className="btn btn-sm">
@@ -2012,9 +2040,9 @@ function Reports() {
 
       <div className="date-filter">
         <label>From:</label>
-        <input type="date" lang="en-GB" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+        <DateInput value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
         <label>To:</label>
-        <input type="date" lang="en-GB" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+        <DateInput value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
         <label>Status:</label>
         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="">All</option>
@@ -2366,11 +2394,11 @@ function InvoiceForm() {
             </div>
             <div className="form-group">
               <label>Invoice Date</label>
-              <input type="date" lang="en-GB" value={invoice.invoiceDate} onChange={(e) => setInvoice({...invoice, invoiceDate: e.target.value})} required />
+              <DateInput value={invoice.invoiceDate} onChange={(e) => setInvoice({...invoice, invoiceDate: e.target.value})} required />
             </div>
             <div className="form-group">
               <label>Due Date</label>
-              <input type="date" lang="en-GB" value={invoice.dueDate || ''} onChange={(e) => setInvoice({...invoice, dueDate: e.target.value})} />
+              <DateInput value={invoice.dueDate || ''} onChange={(e) => setInvoice({...invoice, dueDate: e.target.value})} />
             </div>
             <div className="form-group">
               <label>Status</label>
@@ -2404,7 +2432,7 @@ function InvoiceForm() {
             </div>
             <div className="form-group">
               <label>Date of Supply</label>
-              <input type="date" lang="en-GB" value={invoice.dateOfSupply || ''} onChange={(e) => setInvoice({...invoice, dateOfSupply: e.target.value})} />
+              <DateInput value={invoice.dateOfSupply || ''} onChange={(e) => setInvoice({...invoice, dateOfSupply: e.target.value})} />
             </div>
           </div>
         </div>
