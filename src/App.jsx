@@ -78,13 +78,13 @@ function Layout({ children }) {
               <span></span>
               <span></span>
             </button>
+            {sidebarOpen && (
+              <div className="header-title">
+                <h2>M.R.GRAY BOARDS</h2>
+                <p>Invoice Management</p>
+              </div>
+            )}
           </div>
-          {sidebarOpen && (
-            <>
-              <h2>M.R.GRAY BOARDS</h2>
-              <p>Invoice Management</p>
-            </>
-          )}
         </div>
         <nav className="sidebar-nav">
           <Link to="/" className={`nav-item ${isActive('/') ? 'active' : ''}`}>
