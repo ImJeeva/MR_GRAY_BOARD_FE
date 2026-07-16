@@ -26,6 +26,31 @@ function DateInput({ value, onChange, required, style, className }) {
   );
 }
 
+let toastListener = null;
+function showToast(message, type = 'success') {
+  if (toastListener) toastListener({ id: Date.now(), message, type });
+}
+function ToastContainer() {
+  const [toasts, setToasts] = useState([]);
+  useEffect(() => {
+    toastListener = (toast) => {
+      setToasts(prev => [...prev, toast]);
+      setTimeout(() => {
+        setToasts(prev => prev.filter(t => t.id !== toast.id));
+      }, 3000);
+    };
+    return () => { toastListener = null; };
+  }, []);
+  if (toasts.length === 0) return null;
+  return (
+    <div className="toast-container">
+      {toasts.map(t => (
+        <div key={t.id} className={`toast toast-${t.type}`}>{t.message}</div>
+      ))}
+    </div>
+  );
+}
+
 const getTodayStr = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -1155,8 +1180,10 @@ function ClientList() {
     try {
       if (editingClient) {
         await clientService.update(editingClient.id, formData);
+        showToast('Client updated successfully');
       } else {
         await clientService.create(formData);
+        showToast('Client created successfully');
       }
       setFormData({ name: '', email: '', phone: '', address: '', city: '', state: '', zipCode: '', country: '', gstin: '', placeOfSupply: '' });
       setShowForm(false);
@@ -1164,7 +1191,7 @@ function ClientList() {
       loadClients();
     } catch (error) {
       console.error('Error saving client:', error);
-      alert('Error saving client: ' + (error.message || 'Unknown error'));
+      showToast('Error saving client: ' + (error.message || 'Unknown error'), 'error');
     }
   };
 
@@ -2254,6 +2281,8 @@ function InvoiceForm() {
       const data = await invoiceService.getById(id);
       console.log('Loaded invoice data:', data);
       setInvoice({
+        clientId: data.client?.id || '',
+        companyId: data.company?.id || '',
         invoiceNumber: data.invoiceNumber || '',
         invoiceDate: data.invoiceDate || '',
         dueDate: data.dueDate || '',
@@ -2369,6 +2398,10 @@ function InvoiceForm() {
         <div className="form-section">
           <h3>Invoice Details</h3>
           <div className="form-row">
+            <div className="form-group">
+              <label>Invoice Number</label>
+              <input type="text" value={invoice.invoiceNumber || ''} onChange={(e) => setInvoice({...invoice, invoiceNumber: e.target.value})} placeholder="Auto-generated if left blank" />
+            </div>
             <div className="form-group">
               <label>Client</label>
               <select value={invoice.clientId} onChange={(e) => setInvoice({...invoice, clientId: Number(e.target.value)})} required>
@@ -2539,6 +2572,7 @@ function App() {
   return (
     <Router>
       <div className="app">
+        <ToastContainer />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
