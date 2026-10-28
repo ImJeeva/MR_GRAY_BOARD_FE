@@ -110,9 +110,31 @@ const NavIcons = {
   ),
 };
 
+function getCompanyInitials(name) {
+  const initials = (name || '').trim().split(/\s+/).map(word => word[0]).join('').toUpperCase();
+  return initials.slice(0, 2) || 'MR';
+}
+
+function useCompanyName() {
+  const [companyName, setCompanyName] = useState('M.R.GRAY BOARDS');
+
+  useEffect(() => {
+    companyService.getAll()
+      .then((companies) => {
+        if (companies && companies.length > 0 && companies[0].name) {
+          setCompanyName(companies[0].name);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  return companyName;
+}
+
 function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
+  const companyName = useCompanyName();
 
   const isActive = (path) => {
     if (path === '/') {
@@ -135,10 +157,10 @@ function Layout({ children }) {
         <div className="sidebar-header">
           <div className="header-top">
             <div className="brand-block">
-              <div className="brand-mark" aria-hidden="true">JE</div>
+              <div className="brand-mark" aria-hidden="true">{getCompanyInitials(companyName)}</div>
               {sidebarOpen && (
                 <div className="header-title">
-                  <h2>Jeora</h2>
+                  <h2>{companyName}</h2>
                   <p>Invoice System</p>
                 </div>
               )}
@@ -205,6 +227,7 @@ function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const companyName = useCompanyName();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -237,7 +260,7 @@ function Login() {
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-          <h1>Jeora</h1>
+          <h1>{companyName}</h1>
           <p>Invoice Management System</p>
         </div>
         <form onSubmit={handleLogin}>
