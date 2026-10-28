@@ -2564,9 +2564,9 @@ function InvoiceForm() {
                   </td>
                   <td>
                     {item.uom === 'Bundle' ? (
-                      <input type="number" min="1" placeholder="Bundles" value={item.quantity || ''} onChange={(e) => handleItemChange(index, 'quantity', parseInt(e.target.value) || 0)} style={{width: '60px'}} required />
+                      <input type="number" min="1" step="1" placeholder="Bundles" value={item.quantity || ''} onChange={(e) => handleItemChange(index, 'quantity', parseInt(e.target.value) || 0)} style={{width: '60px'}} required />
                     ) : (
-                      <input type="number" min="1" placeholder="0" value={item.quantity || ''} onChange={(e) => handleItemChange(index, 'quantity', parseInt(e.target.value) || 0)} style={{width: '60px'}} required />
+                      <input type="number" min="0.01" step="0.01" placeholder="0" value={item.quantity || ''} onChange={(e) => handleItemChange(index, 'quantity', parseFloat(e.target.value) || 0)} style={{width: '60px'}} required />
                     )}
                   </td>
                   <td><input type="number" step="0.01" placeholder="0" value={item.unitPrice || ''} onChange={(e) => handleItemChange(index, 'unitPrice', parseFloat(e.target.value) || 0)} style={{width: '80px'}} required /></td>
