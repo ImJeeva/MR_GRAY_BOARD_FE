@@ -655,6 +655,10 @@ body {
   width: 100%;
 }
 
+.react-datepicker-popper {
+  z-index: 10000 !important;
+}
+
 .form-group .react-datepicker-wrapper input {
   width: 100%;
   box-sizing: border-box;

@@ -22,6 +22,7 @@ function DateInput({ value, onChange, required, style, className }) {
       showMonthDropdown
       showYearDropdown
       dropdownMode="select"
+      popperProps={{ strategy: 'fixed' }}
     />
   );
 }
