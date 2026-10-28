@@ -68,6 +68,48 @@ const formatDate = (dateStr) => {
   return `${parts[2]}/${parts[1]}/${parts[0]}`;
 };
 
+const NavIcons = {
+  dashboard: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="3" width="7" height="9" rx="1.5" />
+      <rect x="14" y="3" width="7" height="5" rx="1.5" />
+      <rect x="14" y="12" width="7" height="9" rx="1.5" />
+      <rect x="3" y="16" width="7" height="5" rx="1.5" />
+    </svg>
+  ),
+  invoice: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  ),
+  reports: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6M8 13h8M8 17h5" />
+    </svg>
+  ),
+  clients: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  ),
+  company: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6" />
+      <path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01" />
+    </svg>
+  ),
+  logout: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  ),
+};
+
 function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
@@ -79,57 +121,72 @@ function Layout({ children }) {
     return location.pathname.startsWith(path);
   };
 
+  const navItems = [
+    { to: '/', match: '/', label: 'Dashboard', icon: 'dashboard' },
+    { to: '/invoice/new', match: '/invoice', label: 'Create Invoice', icon: 'invoice' },
+    { to: '/reports', match: '/reports', label: 'Reports', icon: 'reports' },
+    { to: '/clients', match: '/clients', label: 'Clients', icon: 'clients' },
+    { to: '/companies', match: '/companies', label: 'Company', icon: 'company' },
+  ];
+
   return (
     <div className={`dashboard-layout ${!sidebarOpen ? 'sidebar-collapsed' : ''}`}>
       <aside className="sidebar">
         <div className="sidebar-header">
           <div className="header-top">
-            <button className="hamburger-btn" onClick={() => setSidebarOpen(!sidebarOpen)} title={sidebarOpen ? "Collapse Menu" : "Expand Menu"}>
+            <div className="brand-block">
+              <div className="brand-mark" aria-hidden="true">JE</div>
+              {sidebarOpen && (
+                <div className="header-title">
+                  <h2>Jeora</h2>
+                  <p>Invoice System</p>
+                </div>
+              )}
+            </div>
+            <button
+              className="hamburger-btn"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              title={sidebarOpen ? 'Collapse menu' : 'Expand menu'}
+              aria-label={sidebarOpen ? 'Collapse menu' : 'Expand menu'}
+            >
               <span></span>
               <span></span>
               <span></span>
             </button>
-            {sidebarOpen && (
-              <div className="header-title">
-                <h2>M.R.GRAY BOARDS</h2>
-                <p>Invoice Management</p>
-              </div>
-            )}
           </div>
         </div>
-        <nav className="sidebar-nav">
-          <Link to="/" className={`nav-item ${isActive('/') ? 'active' : ''}`}>
-            <span className="nav-icon">📊</span>
-            {sidebarOpen && <span>Dashboard</span>}
-          </Link>
-          <Link to="/invoice/new" className={`nav-item ${isActive('/invoice') ? 'active' : ''}`}>
-            <span className="nav-icon">➕</span>
-            {sidebarOpen && <span>Create Invoice</span>}
-          </Link>
-          <Link to="/reports" className={`nav-item ${isActive('/reports') ? 'active' : ''}`}>
-            <span className="nav-icon">📑</span>
-            {sidebarOpen && <span>Reports</span>}
-          </Link>
-          <Link to="/clients" className={`nav-item ${isActive('/clients') ? 'active' : ''}`}>
-            <span className="nav-icon">👥</span>
-            {sidebarOpen && <span>Clients</span>}
-          </Link>
-          <Link to="/companies" className={`nav-item ${isActive('/companies') ? 'active' : ''}`}>
-            <span className="nav-icon">🏢</span>
-            {sidebarOpen && <span>Company</span>}
-          </Link>
+
+        <nav className="sidebar-nav" aria-label="Main">
+          {sidebarOpen && <p className="nav-section-label">Menu</p>}
+          {navItems.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className={`nav-item ${isActive(item.match) ? 'active' : ''}`}
+              title={!sidebarOpen ? item.label : undefined}
+            >
+              <span className="nav-icon">{NavIcons[item.icon]}</span>
+              {sidebarOpen && <span className="nav-label">{item.label}</span>}
+            </Link>
+          ))}
         </nav>
+
         <div className="sidebar-footer">
           {sidebarOpen ? (
             <LogoutButton />
           ) : (
-            <button onClick={() => {
-              if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('admin');
-                window.location.href = '/login';
-              }
-            }} className="btn btn-sm btn-logout-mini" title="Logout">
-              ⏻
+            <button
+              onClick={() => {
+                if (confirm('Are you sure you want to logout?')) {
+                  localStorage.removeItem('admin');
+                  window.location.href = '/login';
+                }
+              }}
+              className="btn-logout-mini"
+              title="Logout"
+              aria-label="Logout"
+            >
+              {NavIcons.logout}
             </button>
           )}
         </div>
@@ -180,7 +237,7 @@ function Login() {
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-          <h1>M.R.GRAY BOARDS</h1>
+          <h1>Jeora</h1>
           <p>Invoice Management System</p>
         </div>
         <form onSubmit={handleLogin}>
@@ -434,10 +491,16 @@ function ProtectedRoute({ children }) {
 function LogoutButton() {
   const navigate = useNavigate();
   const handleLogout = () => {
+    if (!confirm('Are you sure you want to logout?')) return;
     localStorage.removeItem('admin');
     navigate('/login');
   };
-  return <button onClick={handleLogout} className="btn btn-sm btn-logout">Logout</button>;
+  return (
+    <button onClick={handleLogout} className="btn-logout">
+      {NavIcons.logout}
+      <span>Logout</span>
+    </button>
+  );
 }
 
 function Dashboard() {
@@ -964,47 +1027,51 @@ function Dashboard() {
   return (
     <div>
       <div className="page-header">
-        <h1>Dashboard</h1>
+        <div>
+          <h1>Dashboard</h1>
+          <p className="page-subtitle">Overview of invoices, sales and tax for the selected period</p>
+        </div>
+        <Link to="/invoice/new" className="btn btn-primary">+ New Invoice</Link>
       </div>
-      
+
       {/* Summary Cards */}
       <div className="summary-cards">
-        <div className="summary-card">
+        <div className="summary-card card-invoices">
           <div className="icon">📋</div>
           <div className="info">
             <span className="label">Total Invoices</span>
             <span className="value">{stats.totalInvoices}</span>
           </div>
         </div>
-        <div className="summary-card">
+        <div className="summary-card card-sales">
           <div className="icon">💰</div>
           <div className="info">
             <span className="label">Total Sales</span>
             <span className="value">Rs. {stats.totalSales.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         </div>
-        <div className="summary-card">
+        <div className="summary-card card-pending">
           <div className="icon">⏳</div>
           <div className="info">
             <span className="label">Pending</span>
             <span className="value">Rs. {stats.pending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         </div>
-        <div className="summary-card">
+        <div className="summary-card card-paid">
           <div className="icon">✅</div>
           <div className="info">
             <span className="label">Paid</span>
             <span className="value">Rs. {stats.paid.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         </div>
-        <div className="summary-card">
+        <div className="summary-card card-cgst">
           <div className="icon">📈</div>
           <div className="info">
             <span className="label">CGST</span>
             <span className="value">Rs. {stats.totalCGST.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         </div>
-        <div className="summary-card">
+        <div className="summary-card card-sgst">
           <div className="icon">📉</div>
           <div className="info">
             <span className="label">SGST</span>
